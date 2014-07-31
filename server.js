@@ -373,7 +373,7 @@ var SampleApp = function() {
                 setTimeout(function(){
 
                   console.log('starting connie');
-                      tweetScale(connieSearch, connie1);
+                      //tweetScale(connieSearch, connie1);
                 }, 20000);
             
 
