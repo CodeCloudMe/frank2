@@ -23,7 +23,8 @@ if(process.env.OPENSHIFT_MONGODB_DB_PASSWORD){
 var dbv;
 var apiDB;
 
-var MongoClient = require('mongodb').MongoClient;
+function activateDBs(){
+MongoClient = require('mongodb').MongoClient;
 
 
  MongoClient.connect('mongodb://'+connection_string, function(err, db) {
@@ -35,7 +36,7 @@ var MongoClient = require('mongodb').MongoClient;
 
 
 
-var MongoClient1 = require('mongodb').MongoClient;
+MongoClient1 = require('mongodb').MongoClient;
 
 
  MongoClient1.connect('mongodb://'+connection_string, function(err, db) {
@@ -46,9 +47,10 @@ var MongoClient1 = require('mongodb').MongoClient;
 
      //console.log(apiDB)
     })
+}
 
-
-
+//active the DB on init here
+activateDBs();
 
 
 
@@ -289,7 +291,7 @@ var SampleApp = function() {
 
             var k = schedule.scheduleJob(rule, function(){
                        
-              dbv.close();
+              //dbv.close();
                     console.log('starting timer');
                        
                        
@@ -332,6 +334,10 @@ var SampleApp = function() {
                     console.log('starting timer');
                     dbv.close();
 
+
+                    setTimeout(function(){
+                        activateDBs();   
+                    },500);
                        
 
 
