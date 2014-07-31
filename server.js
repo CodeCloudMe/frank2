@@ -289,7 +289,7 @@ var SampleApp = function() {
 
             var k = schedule.scheduleJob(rule, function(){
                        
-
+              dbv.close();
                     console.log('starting timer');
                        
                        
@@ -330,7 +330,7 @@ var SampleApp = function() {
                        
 
                     console.log('starting timer');
-
+                    dbv.close();
 
                        
 
