@@ -54,28 +54,32 @@ var MongoClient1 = require('mongodb').MongoClient;
 
 function tweetScale(searchTerm, user){
 
+    var tweetSessionLimit = 5;
+    var tweetsThisSession =0;
   var twitterLinks=[];
    var twitterStatuses=[];
     var twitterResEng=[];
-    params = {count:200, lang:"en", "result_type":'recent'};
+   var params = {count:200, lang:"en", "result_type":'recent'};
             twitter = require('twitter');
 
-                crafter=user['username'];
-                crafterKeyword = user['category'];
+                var crafter=user['username'];
+               var  crafterKeyword = user['category'];
+                
+
                 var twit3 = new twitter({
                 consumer_key: user['key'],
                 consumer_secret: user['secret'],
-                access_token_key: user['token'],
+                 access_token_key: user['token'],
                 access_token_secret: user['tokensecret']
             });
 twit3.search(searchTerm, params , function(data) {
 
                 //console.log(data);
-                twitterRes= data['statuses'];
+               var  twitterRes= data['statuses'];
                 for(i in twitterRes){
                     try{
                         if(twitterRes[i]['entities']['urls'][0]['expanded_url']!=''){
-                            status = twitterRes[i]['text'];
+                            var status = twitterRes[i]['text'];
                             twitterLinks.push(twitterRes[i]['entities']['urls'][0]['expanded_url']);
                             twitterStatuses.push(status);
                         }
@@ -89,16 +93,17 @@ twit3.search(searchTerm, params , function(data) {
                         twitterResEng.push(twitterRes[i]);
                 }
 
-                saveArr= [];
-               theC= 0;
+                var saveArr= [];
+              var  theC= 0;
+              theNewC =0;
             for(i in twitterStatuses){
 
 
                 apiDB.collection('twitterLinks').find({"status":twitterStatuses[i]}).toArray(function(err, results){
-
-                    resu = results[0];
+                   
+                   var resu = results[0];
                     if(typeof resu != "undefined" ){
-   
+                        //this tweet does exists in db
                         console.log(results);
                         console.log("not posting:"+twitterStatuses[theC])
 
@@ -106,6 +111,11 @@ twit3.search(searchTerm, params , function(data) {
                     }
                     else{
 
+                        if(tweetsThisSession<= tweetSessionLimit){
+
+                            tweetsThisSession = tweetsThisSession+1;
+                        
+                      
                      
                             console.log("\n\n posting! \n \n");
                             //link without http or s
@@ -116,8 +126,9 @@ twit3.search(searchTerm, params , function(data) {
                             //post after 1- 12 seconds so posts don't happen all at once
                             randTime = Math.floor(Math.random() * 20000) + 1;
                           
+                           console.log("newC is"+theNewC);
                             var theFullPost= post +" " + "http://emcade.com/n/http://"+actualLink;
-                            setTimeout(function(){
+                           setTimeout(function(){
                                     console.log(theFullPost);
                                         twit3.updateStatus(theFullPost,
                                     function(data) {
@@ -131,13 +142,25 @@ twit3.search(searchTerm, params , function(data) {
                        
                         //post
                     }
+                      else{
 
+                            console.log("hit limit of tweets for user"+ crafter );
+                          
+                        }
+
+
+                    }
                      theC = theC+1
                 })
 
-                saveArr.push({"status":twitterStatuses[i], "link":twitterLinks[i], "crafter":user['username'], "category":searchTerm});
+        //for saving
+                   
+                   theNewC = theNewC +1;
                
             }
+
+              saveArr.push({"status":twitterStatuses[i], "link":twitterLinks[i], "crafter":user['username'], "category":searchTerm});
+               
 
 
             setTimeout(function(){
@@ -330,11 +353,36 @@ var SampleApp = function() {
                        
 
                     console.log('starting timer');
-                    dbv.close();
+                   // dbv.close();
+
+
+/*
+
+
+ MongoClient.connect('mongodb://'+connection_string, function(err, db) {
+
+    
+    dbv=db;
+     //console.log(dbv)
+    })
+
+
+
+MongoClient1 = require('mongodb').MongoClient;
+
+
+ MongoClient1.connect('mongodb://'+connection_string, function(err, db) {
+
+    
+    apiDB=db;
+     //console.log(dbv)
+
+     //console.log(apiDB)
+    })
 
                        
 
-
+*/
 
             twitter = require('twitter');
 
@@ -348,236 +396,52 @@ var SampleApp = function() {
             });
 
 
-                crafter2="pdcolgan";
-                crafterKeyword2 = "fashion";
-                var twit2 = new twitter({
-                consumer_key: 'jvwezQbOfMUjWivwFtV7UltHZ',
-                consumer_secret: 'fltcMGbIIQXgwTGpEKX4JJzpIBfUtxXcRJBwES8qDjU0sG2HOv',
-                access_token_key: '2687974634-CqmF23m6Fg4BzbRaJNZAsAU0SaMYZWXKagTqhV1',
-                access_token_secret: 'BgoybBZxTllaDDoBTqmrmgNXmnisw1TNTXJGRcyTamnNj'
-            });
 
 
                 //users
 
-
+/*
                 connie1 = {"username":"aprilwaking", 'category':'fashion', 'key':'lKnDiCEadgMuP6iNSm4dJW0vg', 'secret':'DEytPBHrbUfadI6uuDIBXoziEUl7Ze6yFG17TBYVdsX4JufpvA', 'token':'2693910547-AKH80ztv6A1ULMFxtPdtYhXBYo6JbUgvjkthSaD', 'tokensecret':'1sHKnMtH1fNkCrLdfCt7vavGxx2alQEEtqvqwOeUc309A'}
                 connieSearch = "from:beautyblitz, OR from:CathyHorynNYT, OR from:glambr, OR from:styledotcom, OR from:vanityfair, OR from:StyleCaster, OR from:fashgonerogue, OR from:popsugarbeauty"
+*/
 
-                setTimeout(function(){
+        twitterObjs =
+            [
+                [{"username":"rebbyham", 'category':'fashion', 'key':'Cxhp6whvvXPIIsw7L5OK4tMbH', 'secret':'Fq1LmYij4490z5cJ6ExM16Q5fAhBWC7KMndu70G5ur8lIHkPpY', 'token':'2688197214-DA6imGpQUPNUVIRiWaop3hE0F1q6galbmn4gCcc', 'tokensecret':'ZL0FAzPLSxuYwc8QAAhtlx0daVGSBQX3erywO0sVAmhHT', 'password':"MYson0352"}
+                ,"from:beautyblitz, OR from:CathyHorynNYT, OR from:glambr, OR from:styledotcom, OR from:vanityfair, OR from:StyleCaster, OR from:fashgonerogue, OR from:popsugarbeauty"],
 
-                  console.log('starting connie');
-                      tweetScale(connieSearch, connie1);
-                }, 20000);
+                  [{"username":"sherridayo", 'category':'fitness', 'key':'E6lIu13MvjiVW3V315E6oeG6C', 'secret':'QWd27hVsHRj3kRJsFWhWhrAgcz6jRUXveYtPOGiCjVG9gf25xg', 'token':'2688233732-Lqvd41F8STLT5HlXceJk6zQxToLgVm6Tcr7BGuK', 'tokensecret':'UE8qdGt6GFxHKvldZ5gP7bLUaRHPli68ikV9w4km6zacp', 'password':"MYson0352"}
+                ,"from:greatist, OR from:dailyburn, OR from:FitBottomedGirl, OR from:TFerriss, OR from:bornfitness, OR from:ElephantJournal, OR from:AthleticFoodie, OR from:zentofitness"],
+
+
+                [{"username":"emilyneels", 'category':'fitness', 'key':'zTrG0GTRDAeZYv6rXA0JiENZw', 'secret':'khA9bMIeMSMG61p41qhqv9glqC7eczmvqeTsFe72ISjwt8rTO2', 'token':'2688188420-y80CFkE9wONkvtROCXyEcmdeFGUgaoMR5RDCAni', 'tokensecret':'M85Jsopw5vz5yAdfGvh0qaMNnyNuXiELVpLWcgtaarE9z'}
+                ,"from:RobbWolf, OR from:trinkfitness, OR from:martinberkhan, OR from:JasonFerruggia, OR from:erwan_le_corre, OR from:johnromaniello, OR from:stevekamb, OR from:iRunnerBlog"],
+                
+                
+            ]
+
+            twitterTimer = 10000;
+            userCounter=0;
+            for(z in twitterObjs){
+
+                 setTimeout(function(){
+                    
+                  console.log('starting another user '+ twitterObjs[userCounter][0]['username']);
+
+                  //twitterObj[1] is term on twitter to search and [0] is twitter user credentials
+                      tweetScale(twitterObjs[userCounter][1], twitterObjs[userCounter][0]);
+                      userCounter= userCounter+1;
+
+                }, twitterTimer);
+
+                 twitterTimer = twitterTimer+10000;
+            }
+               
             
 
 
-            twitterLinks= [];
-            twitterStatuses=[];
-            twitterResEng=[];
-           
-            params = {count:200, lang:"en", "result_type":'recent'};
-            twit1.search("from:joedowdellnyc, OR from:huffingtonpost", params , function(data) {
-
-                //console.log(data);
-                twitterRes= data['statuses'];
-                for(i in twitterRes){
-                    try{
-                        if(twitterRes[i]['entities']['urls'][0]['expanded_url']!=''){
-                            status = twitterRes[i]['text'];
-                            twitterLinks.push(twitterRes[i]['entities']['urls'][0]['expanded_url']);
-                            twitterStatuses.push(status);
-                        }
-                    }
-                    catch(err){
-
-                            // do nothing.... doesn't have link
-                    }
-                    
-                    if(twitterRes[i]['metadata']['iso_language_code']=="en")
-                        twitterResEng.push(twitterRes[i]);
-                }
-
-                saveArr= [];
-               theC= 0;
-            for(i in twitterStatuses){
 
 
-                apiDB.collection('twitterLinks').find({"status":twitterStatuses[i]}).toArray(function(err, results){
-
-                    resu = results[0];
-                    if(typeof resu != "undefined" ){
-   
-                        console.log(results);
-                        console.log("not posting:"+twitterStatuses[theC])
-
-                        //
-                    }
-                    else{
-
-                     
-                            console.log("\n\n posting! \n \n");
-                            //link without http or s
-                            actualLink = twitterStatuses[theC].split('://')[1];
-                            link = twitterStatuses[theC].split('://')[1].split(' ')[0];
-                            post = twitterStatuses[theC].split(link)[0].split(/http:\/\/|https:\/\//)[0];
-                             
-                            //post after 1- 12 seconds so posts don't happen all at once
-                            randTime = Math.floor(Math.random() * 20000) + 1;
-                          
-                            var theFullPost= post +" " + "http://emcade.com/n/http://"+actualLink;
-                            setTimeout(function(){
-                                    console.log(theFullPost);
-                                        twit1.updateStatus(theFullPost,
-                                    function(data) {
-                                        console.log((data));
-                                    }
-                                    );
-
-                            }, randTime, theFullPost);
-                             
-
-                       
-                        //post
-                    }
-
-                     theC = theC+1
-                })
-
-                saveArr.push({"status":twitterStatuses[i], "link":twitterLinks[i], "crafter":crafter, "category":crafterKeyword});
-               
-            }
-
-
-            setTimeout(function(){
-             dbv.collection('twitterLinks').insert( saveArr,function(err, records){
-              if(err) { console.log('write error: '+err);}
-
-
-              //console.log(saveArr);
-              console.log('records saved up');
-
-
-            })
-
-         }, 5000);
-
-            console.log(twitterStatuses);
-          
-
-
-
-        });
-
-
-
-
-
-
-//user 2
-
-
-
-
-
-setTimeout(function(){
-   twitterLinks=[];
-   twitterStatuses=[];
-    twitterResEng=[];
-twit2.search("from:luckymagazine, OR from:WomensWearDaily, OR from:Fashionista_com, OR from:Refinery29", params , function(data) {
-
-                //console.log(data);
-                twitterRes= data['statuses'];
-                for(i in twitterRes){
-                    try{
-                        if(twitterRes[i]['entities']['urls'][0]['expanded_url']!=''){
-                            status = twitterRes[i]['text'];
-                            twitterLinks.push(twitterRes[i]['entities']['urls'][0]['expanded_url']);
-                            twitterStatuses.push(status);
-                        }
-                    }
-                    catch(err){
-
-                            // do nothing.... doesn't have link
-                    }
-                    
-                    if(twitterRes[i]['metadata']['iso_language_code']=="en")
-                        twitterResEng.push(twitterRes[i]);
-                }
-
-                saveArr= [];
-               theC= 0;
-            for(i in twitterStatuses){
-
-
-                apiDB.collection('twitterLinks').find({"status":twitterStatuses[i]}).toArray(function(err, results){
-
-                    resu = results[0];
-                    if(typeof resu != "undefined" ){
-   
-                        console.log(results);
-                        console.log("not posting:"+twitterStatuses[theC])
-
-                        //
-                    }
-                    else{
-
-                     
-                            console.log("\n\n posting! \n \n");
-                            //link without http or s
-                            actualLink = twitterStatuses[theC].split('://')[1];
-                            link = twitterStatuses[theC].split('://')[1].split(' ')[0];
-                            post = twitterStatuses[theC].split(link)[0].split(/http:\/\/|https:\/\//)[0];
-                             
-                            //post after 1- 12 seconds so posts don't happen all at once
-                            randTime = Math.floor(Math.random() * 20000) + 1;
-                          
-                            var theFullPost= post +" " + "http://emcade.com/n/http://"+actualLink;
-                            setTimeout(function(){
-                                    console.log(theFullPost);
-                                        twit2.updateStatus(theFullPost,
-                                    function(data) {
-                                        console.log((data));
-                                    }
-                                    );
-
-                            }, randTime, theFullPost);
-                             
-
-                       
-                        //post
-                    }
-
-                     theC = theC+1
-                })
-
-                saveArr.push({"status":twitterStatuses[i], "link":twitterLinks[i], "crafter":crafter2, "category":crafterKeyword2});
-               
-            }
-
-
-            setTimeout(function(){
-             dbv.collection('twitterLinks').insert( saveArr,function(err, records){
-              if(err) { console.log('write error: '+err);}
-
-
-              //console.log(saveArr);
-              console.log('records saved up');
-
-
-            })
-
-         }, 5000);
-
-            console.log(twitterStatuses);
-          
-
-
-
-        });
-
-
-},10000);
 
 
 
