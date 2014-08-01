@@ -93,11 +93,12 @@ twit3.search(searchTerm, params , function(data) {
                         twitterResEng.push(twitterRes[i]);
                 }
 
-                var saveArr= [];
+                saveArr= [];
               var  theC= 0;
               theNewC =0;
             for(i in twitterStatuses){
-
+                 saveArr.push({"status":twitterStatuses[i], "link":twitterLinks[i], "crafter":user['username'], "category":searchTerm});
+               
 
                 apiDB.collection('twitterLinks').find({"status":twitterStatuses[i]}).toArray(function(err, results){
                    
@@ -160,8 +161,7 @@ twit3.search(searchTerm, params , function(data) {
                
             }
 
-              saveArr.push({"status":twitterStatuses[i], "link":twitterLinks[i], "crafter":user['username'], "category":searchTerm});
-               
+           
 
 
             setTimeout(function(){
