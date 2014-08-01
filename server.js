@@ -354,14 +354,15 @@ var SampleApp = function() {
                        
 
                     console.log('starting timer');
-                   // dbv.close();
+                    dbv.close();
 
 
-/*
+
 
 
  MongoClient.connect('mongodb://'+connection_string, function(err, db) {
 
+    
     
     dbv=db;
      //console.log(dbv)
@@ -383,7 +384,7 @@ MongoClient1 = require('mongodb').MongoClient;
 
                        
 
-*/
+
 
             twitter = require('twitter');
 
@@ -409,14 +410,14 @@ MongoClient1 = require('mongodb').MongoClient;
         twitterObjs =
             [
                 [{"username":"rebbyham", 'category':'fashion', 'key':'Cxhp6whvvXPIIsw7L5OK4tMbH', 'secret':'Fq1LmYij4490z5cJ6ExM16Q5fAhBWC7KMndu70G5ur8lIHkPpY', 'token':'2688197214-DA6imGpQUPNUVIRiWaop3hE0F1q6galbmn4gCcc', 'tokensecret':'ZL0FAzPLSxuYwc8QAAhtlx0daVGSBQX3erywO0sVAmhHT', 'password':"MYson0352"}
-                ,"from:beautyblitz, OR from:CathyHorynNYT, OR from:glambr, OR from:styledotcom, OR from:vanityfair, OR from:StyleCaster, OR from:fashgonerogue, OR from:popsugarbeauty"],
+                ,"from:beautyblitz, OR from:CathyHorynNYT, OR from:glambr, OR from:styledotcom, OR from:vanityfair, OR from:StyleCaster, OR from:fashgonerogue, OR from:popsugarbeauty, OR from:vogue"],
 
                   [{"username":"sherridayo", 'category':'fitness', 'key':'E6lIu13MvjiVW3V315E6oeG6C', 'secret':'QWd27hVsHRj3kRJsFWhWhrAgcz6jRUXveYtPOGiCjVG9gf25xg', 'token':'2688233732-Lqvd41F8STLT5HlXceJk6zQxToLgVm6Tcr7BGuK', 'tokensecret':'UE8qdGt6GFxHKvldZ5gP7bLUaRHPli68ikV9w4km6zacp', 'password':"MYson0352"}
-                ,"from:greatist, OR from:dailyburn, OR from:FitBottomedGirl, OR from:TFerriss, OR from:bornfitness, OR from:ElephantJournal, OR from:AthleticFoodie, OR from:zentofitness"],
+                ,"from:greatist, OR from:dailyburn, OR from:FitBottomedGirl, OR from:TFerriss, OR from:bornfitness, OR from:ElephantJournal, OR from:AthleticFoodie, OR from:zentofitness, OR from:lululemon, OR from:yogadork"],
 
 
                 [{"username":"emilyneels", 'category':'fitness', 'key':'zTrG0GTRDAeZYv6rXA0JiENZw', 'secret':'khA9bMIeMSMG61p41qhqv9glqC7eczmvqeTsFe72ISjwt8rTO2', 'token':'2688188420-y80CFkE9wONkvtROCXyEcmdeFGUgaoMR5RDCAni', 'tokensecret':'M85Jsopw5vz5yAdfGvh0qaMNnyNuXiELVpLWcgtaarE9z'}
-                ,"from:RobbWolf, OR from:trinkfitness, OR from:martinberkhan, OR from:JasonFerruggia, OR from:erwan_le_corre, OR from:johnromaniello, OR from:stevekamb, OR from:iRunnerBlog"],
+                ,"from:RobbWolf, OR from:trinkfitness, OR from:martinberkhan, OR from:JasonFerruggia, OR from:erwan_le_corre, OR from:johnromaniello, OR from:stevekamb, OR from:iRunnerBlog, OR from:profspiker, OR from:TaraStiles"],
                 
                 
             ]
