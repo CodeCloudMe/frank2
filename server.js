@@ -101,6 +101,7 @@ twit3.search(searchTerm, params , function(data) {
 
                 apiDB.collection('twitterLinks').find({"status":twitterStatuses[i]}).toArray(function(err, results){
                    
+                   //what's the numver you're on... theC...
                    var resu = results[0];
                     if(typeof resu != "undefined" ){
                         //this tweet does exists in db
@@ -124,7 +125,7 @@ twit3.search(searchTerm, params , function(data) {
                             post = twitterStatuses[theC].split(link)[0].split(/http:\/\/|https:\/\//)[0];
                              
                             //post after 1- 12 seconds so posts don't happen all at once
-                            randTime = Math.floor(Math.random() * 20000) + 1;
+                            randTime = Math.floor(Math.random() * 10000) + 1;
                           
                            console.log("newC is"+theNewC);
                             var theFullPost= post +" " + "http://emcade.com/n/http://"+actualLink;
@@ -420,7 +421,7 @@ MongoClient1 = require('mongodb').MongoClient;
                 
             ]
 
-            twitterTimer = 10000;
+            twitterTimer = 5000;
             userCounter=0;
             for(z in twitterObjs){
 
